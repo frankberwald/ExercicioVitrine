@@ -1,12 +1,12 @@
 import { AppDataSource } from "./data-source"
 import express from "express"
 import cors from "cors"
-import { User } from "./entities/User"
 
 const app = express()
 
 app.use(cors())
 app.use(express.json())
+
 
 AppDataSource.initialize().then(async () => {
     app.listen(3030, () => {

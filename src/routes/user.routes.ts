@@ -1,13 +1,14 @@
 import { AppDataSource } from "../data-source"
 import { User } from "../entities/User"
 import { Router, Request, Response } from "express"
+import authMiddle from "../middlewares/auth";
 
 
 const userRepository = AppDataSource.getRepository(User);
 
 const userRouter = Router()
 
-userRouter.get ("/users", (req, res)=> {
+userRouter.get ("/users", authMiddle, (req, res)=> {
   try{
     const listUser = userRepository.find()
     res.status(200).json(listUser)

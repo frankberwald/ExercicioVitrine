@@ -1,11 +1,19 @@
 import { AppDataSource } from "./data-source"
 import express from "express"
 import cors from "cors"
+import userRouter from "./routes/user.routes"
+import userLoginRoutes from "./routes/user.login.routes"
+import medicineRouter from "./routes/medicine.routes"
+import dotenv from "dotenv"
 
+dotenv.config()
 const app = express()
 
 app.use(cors())
 app.use(express.json())
+app.use("/users", userRouter)
+app.use("/login", userLoginRoutes)
+app.use("/medicine", medicineRouter)
 
 
 AppDataSource.initialize().then(async () => {

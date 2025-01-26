@@ -1,29 +1,31 @@
-import { AppDataSource } from "../data-source"
-import { User } from "../entities/User"
-import { Router, Request, Response } from "express"
-
+import { AppDataSource } from "../data-source";
+import { User } from "../entities/User";
+import { Router, Request, Response } from "express";
+import bcrypt from "bcrypt";
+import authMiddle from "../middlewares/auth";
 
 const userRepository = AppDataSource.getRepository(User);
+const userRouter = Router();
 
-const userRouter = Router()
-
-userRouter.get ("/users", (req, res)=> {
+userRouter.get ("/", authMiddle, async (req, res)=> {
   try{
-    const listUser = userRepository.find()
+    const listUser = await userRepository.find()
     res.status(200).json(listUser)
   } catch (ex){
     res.status(500).send("Erro ao executar solicitação")
   }
 })
 
-userRouter.post ("/users", async (req:Request, res:Response) => {
+userRouter.post ("/", async (req:Request, res:Response) => {
   const { name, email, password } = req.body;
 
   if(!name || !email || !password){
     res.status(400).send("Todos os campos são obrigatórios!");
+    return
   }
   try{
-    const user = await userRepository.create({name, email, password})
+    const hasedPassword = await bcrypt.hash(password, 10);
+    const user = await userRepository.create({name, email, password: hasedPassword})
     await userRepository.save(user);
     res.status(201).json({message: "Usuário criado com sucesso!", user})
   } catch (ex){
@@ -72,5 +74,4 @@ userRouter.delete("/:id", async (req: Request, res: Response) => {
       res.status(500).send("Ocorreu um erro ao executar a solicitação")
   }
 })
-
 export default userRouter

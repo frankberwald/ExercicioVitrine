@@ -17,7 +17,7 @@ export class Medicines {
     quantidade: number
 
     @OneToOne(()=> User)
-    @JoinColumn()
+    @JoinColumn({ name: "userId" })
     user: User
 
 }

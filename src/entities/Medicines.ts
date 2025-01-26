@@ -16,9 +16,6 @@ export class Medicines {
     @Column()
     quantidade: number
 
-    @Column()
-    userId: number
-
     @OneToOne(()=> User)
     @JoinColumn()
     user: User

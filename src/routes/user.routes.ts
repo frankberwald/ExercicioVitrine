@@ -3,7 +3,6 @@ import { User } from "../entities/User";
 import { Router, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import authMiddle from "../middlewares/auth";
-import userLoginRoutes from "./user.login.routes";
 
 const userRepository = AppDataSource.getRepository(User);
 const userRouter = Router();
@@ -75,7 +74,4 @@ userRouter.delete("/:id", async (req: Request, res: Response) => {
       res.status(500).send("Ocorreu um erro ao executar a solicitação")
   }
 })
-
-userLoginRoutes
-
 export default userRouter

@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm"
+import { User } from "./User"
 
 @Entity()
 export class Medicines {
@@ -10,9 +11,16 @@ export class Medicines {
     name: string
 
     @Column()
-    email: string
+    descricao: string
 
     @Column()
-    password: number
+    quantidade: number
+
+    @Column()
+    userId: number
+
+    @OneToOne(()=> User)
+    @JoinColumn()
+    user: User
 
 }

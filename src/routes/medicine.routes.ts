@@ -2,7 +2,6 @@ import { AppDataSource } from "../data-source"
 import { Medicines } from "../entities/Medicines"
 import { Router, Request, Response } from "express";
 import authMiddle from "../middlewares/auth";
-import express from "../types/express";
 
 const medicinesRepository = AppDataSource.getRepository(Medicines);
 const medicineRouter = Router();

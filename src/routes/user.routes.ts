@@ -7,7 +7,7 @@ import authMiddle from "../middlewares/auth";
 const userRepository = AppDataSource.getRepository(User);
 const userRouter = Router();
 
-userRouter.get ("/users", authMiddle, async (req, res)=> {
+userRouter.get ("/", authMiddle, async (req, res)=> {
   try{
     const listUser = await userRepository.find()
     res.status(200).json(listUser)
@@ -16,7 +16,7 @@ userRouter.get ("/users", authMiddle, async (req, res)=> {
   }
 })
 
-userRouter.post ("/users", async (req:Request, res:Response) => {
+userRouter.post ("/", async (req:Request, res:Response) => {
   const { name, email, password } = req.body;
 
   if(!name || !email || !password){

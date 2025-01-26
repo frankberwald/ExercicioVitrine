@@ -7,13 +7,13 @@ export class Medicines {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({ type: "varchar", length: 100 })
     name: string
 
-    @Column()
+    @Column({ type: "text", nullable: true })
     descricao: string
 
-    @Column()
+    @Column({ type: "int" })
     quantidade: number
 
     @OneToOne(()=> User)

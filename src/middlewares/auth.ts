@@ -7,14 +7,15 @@ import { User } from "../entities/User";
 const authMiddle = async (req: Request, res: Response, next: NextFunction) => {
   console.log(req.headers)
   const authHeader = req.headers.authorization
-  if (authHeader) {
+  if (!authHeader) {
     return res.status(401).json({message: "Token de autenticação ausente"})
   }
-  const token = authHeader?.split("")[1];
+  const token = authHeader?.split(" ")[1];
   if (!token) {
     return res.status(401).json({message: "Token Inválido"})
   } try {
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET || "naocontapraninguemrsrs")
+    const secret = process.env.JWT_SECRET || "default_jwt_secret";
+    const decoded: any = jwt.verify(token, secret);
     const user = await AppDataSource.getRepository(User).findOne({where: {id: decoded.id}})
     if (!user) {
       return res.status(401).json({message: "Usuário não encontrado."});

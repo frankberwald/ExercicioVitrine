@@ -4,7 +4,9 @@ import cors from "cors"
 import userRouter from "./routes/user.routes"
 import userLoginRoutes from "./routes/user.login.routes"
 import medicineRouter from "./routes/medicine.routes"
+import dotenv from "dotenv"
 
+dotenv.config()
 const app = express()
 
 app.use(cors())

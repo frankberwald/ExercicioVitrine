@@ -33,4 +33,4 @@ Este é o projeto desenvolvido para organizar uma vitrine de medicamentos, aonde
 Primeiro, clone o repositório para sua máquina local:
 
 ```bash
-git clone https://github.com/seu-usuario/nome-do-repositorio.git
+git clone https://github.com/frankberwald/ExercicioVitrine.git

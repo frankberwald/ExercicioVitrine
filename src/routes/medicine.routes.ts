@@ -7,26 +7,65 @@ const medicinesRepository = AppDataSource.getRepository(Medicines);
 const medicineRouter = Router();
 
 medicineRouter.get("/all", async (req: Request, res: Response) => {
+  if (!req.user) {
+    res.status(401).json({ message: "Usuário não autenticado!" });
+    return;
+  }
   try {
-    const listMedicine = await medicinesRepository.find()
-    res.status(200).json(listMedicine)
+    const {page = 1, limit = 10, name} = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
+    const [listMedicine, total] = await medicinesRepository.findAndCount({
+      where: name? {name: name as string} : {},
+      skip,
+      take:Number(limit),
+    });
+
+    res.status(200).json({
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      data: listMedicine,
+    });
   } catch (ex) {
+    console.error("Erro ao buscar medicamentos:", ex);
     res.status(500).send("Erro ao executar solicitação")
   }
-})
+});
 
 medicineRouter.get("/", authMiddle, async (req: Request, res: Response) => {
+  if (!req.user) {
+    res.status(401).json({ message: "Usuário não autenticado!" });
+    return;
+  }
   try {
-    const listMedicine = await medicinesRepository.find({
-      where: { user: {id :req.user.id} },
+    const {page = 1, limit = 10, name} = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
+    const [listMedicine, total] = await medicinesRepository.findAndCount({
+      where: {
+        user: { id: req.user.id },
+        ...(name ? { name: name as string } : {}),
+      },
+      skip,
+      take: Number(limit),
     });
-    res.status(200).json(listMedicine);
+
+    res.status(200).json({
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      data: listMedicine,
+    });
   } catch (ex) {
-    res.status(500).send("Erro ao executar solicitação");
+    console.error("Erro ao buscar medicamentos:", ex);
+    res.status(500).send("Erro ao executar solicitação")
   }
 });
 
 medicineRouter.post("/", authMiddle, async (req: Request, res: Response) => {
+  if (!req.user) {
+    res.status(401).json({ message: "Usuário não autenticado!" });
+    return;
+  }
   const { name, descricao, quantidade } = req.body;
   if (!name || !descricao || !quantidade) {
     res.status(400).send("Todos os campos são obrigatórios!");
@@ -43,6 +82,10 @@ medicineRouter.post("/", authMiddle, async (req: Request, res: Response) => {
 })
 
 medicineRouter.put("/:id", authMiddle, async (req: Request, res: Response) => {
+  if (!req.user) {
+    res.status(401).json({ message: "Usuário não autenticado!" });
+    return;
+  }
   try {
     const medicine = await medicinesRepository.findOne({
       where: { id: +req.params.id },
@@ -68,6 +111,10 @@ medicineRouter.put("/:id", authMiddle, async (req: Request, res: Response) => {
 });
 
 medicineRouter.delete("/:id", authMiddle, async (req: Request, res: Response) => {
+  if (!req.user) {
+    res.status(401).json({ message: "Usuário não autenticado!" });
+    return;
+  }
   try {
     const medicine = await medicinesRepository.findOne({
       where: { id: +req.params.id },

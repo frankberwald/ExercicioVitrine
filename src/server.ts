@@ -1,11 +1,11 @@
 import { AppDataSource } from "./data-source"
 import express from "express"
 import cors from "cors"
+import dotenv from "dotenv"
 import userRouter from "./routes/user.routes"
 import userLoginRoutes from "./routes/user.login.routes"
 import medicineRouter from "./routes/medicine.routes"
-import dotenv from "dotenv"
-
+import '/src/types/express/index.d'
 dotenv.config()
 const app = express()
 

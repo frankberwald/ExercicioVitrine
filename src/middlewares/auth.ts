@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { AppDataSource } from "../data-source";
 import { User } from "../entities/User";
+
 
 const authMiddle = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -30,9 +31,8 @@ const authMiddle = async (req: Request, res: Response, next: NextFunction): Prom
       res.status(401).json({ message: "Usuário não encontrado." });
       return;
     }
-
-    req.user = user;
-    next();
+    (req as any).user = user;
+    next()
   } catch (error) {
     console.error("Erro de autenticação", error);
     res.status(401).json({ message: "Token Inválido ou expirado" });

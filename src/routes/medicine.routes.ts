@@ -2,12 +2,14 @@ import { AppDataSource } from "../data-source"
 import { Medicines } from "../entities/Medicines"
 import { Router, Request, Response } from "express";
 import authMiddle from "../middlewares/auth";
+import { User } from "../entities/User";
 
 const medicinesRepository = AppDataSource.getRepository(Medicines);
 const medicineRouter = Router();
 
 medicineRouter.get("/all", async (req: Request, res: Response) => {
-  if (!req.user) {
+  const user = req.user as User;
+  if (!user) {
     res.status(401).json({ message: "Usuário não autenticado!" });
     return;
   }
@@ -33,7 +35,8 @@ medicineRouter.get("/all", async (req: Request, res: Response) => {
 });
 
 medicineRouter.get("/", authMiddle, async (req: Request, res: Response) => {
-  if (!req.user) {
+  const user = req.user as User;
+  if (!user) {
     res.status(401).json({ message: "Usuário não autenticado!" });
     return;
   }
@@ -42,7 +45,7 @@ medicineRouter.get("/", authMiddle, async (req: Request, res: Response) => {
     const skip = (Number(page) - 1) * Number(limit);
     const [listMedicine, total] = await medicinesRepository.findAndCount({
       where: {
-        user: { id: req.user.id },
+        user: { id: user.id },
         ...(name ? { name: name as string } : {}),
       },
       skip,
@@ -62,7 +65,8 @@ medicineRouter.get("/", authMiddle, async (req: Request, res: Response) => {
 });
 
 medicineRouter.post("/", authMiddle, async (req: Request, res: Response) => {
-  if (!req.user) {
+  const user = req.user as User;
+  if (!user) {
     res.status(401).json({ message: "Usuário não autenticado!" });
     return;
   }
@@ -72,7 +76,7 @@ medicineRouter.post("/", authMiddle, async (req: Request, res: Response) => {
     return
   }
   try {
-    const medicine = await medicinesRepository.create({ name, descricao, quantidade, user: {id :req.user.id} })
+    const medicine = await medicinesRepository.create({ name, descricao, quantidade, user: {id :user.id} })
     await medicinesRepository.save(medicine);
     res.status(201).json({ message: "Registro criado com sucesso!", medicine })
   } catch (ex) {
@@ -82,7 +86,8 @@ medicineRouter.post("/", authMiddle, async (req: Request, res: Response) => {
 })
 
 medicineRouter.put("/:id", authMiddle, async (req: Request, res: Response) => {
-  if (!req.user) {
+  const user = req.user as User;
+  if (!user) {
     res.status(401).json({ message: "Usuário não autenticado!" });
     return;
   }
@@ -94,7 +99,7 @@ medicineRouter.put("/:id", authMiddle, async (req: Request, res: Response) => {
       res.status(404).json({ message: "Medicamento não encontrado!" });
       return
     }
-    if (medicine.user.id !== req.user.id) {
+    if (medicine.user.id !== user.id) {
       res.status(403).json({ message: "Você não tem permissão para atualizar este medicamento!" });
       return
     }
@@ -111,7 +116,8 @@ medicineRouter.put("/:id", authMiddle, async (req: Request, res: Response) => {
 });
 
 medicineRouter.delete("/:id", authMiddle, async (req: Request, res: Response) => {
-  if (!req.user) {
+  const user = req.user as User;
+  if (!user) {
     res.status(401).json({ message: "Usuário não autenticado!" });
     return;
   }
@@ -124,7 +130,7 @@ medicineRouter.delete("/:id", authMiddle, async (req: Request, res: Response) =>
       res.status(404).json({ message: "Medicamento não encontrado!" });
       return
     }
-    if (medicine.user.id !== req.user.id) {
+    if (medicine.user.id !== user.id) {
       res.status(403).json({ message: "Você não tem permissão para remover este medicamento!" });
       return
     }

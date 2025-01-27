@@ -1,4 +1,4 @@
-import { User } from "../entities/User";
+import { User } from "../entities/User"
 declare global {
   namespace Express {
     interface Request {
@@ -6,5 +6,3 @@ declare global {
     }
   }
 }
-
-export default express.d

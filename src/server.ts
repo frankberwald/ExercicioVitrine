@@ -5,7 +5,7 @@ import dotenv from "dotenv"
 import userRouter from "./routes/user.routes"
 import userLoginRoutes from "./routes/user.login.routes"
 import medicineRouter from "./routes/medicine.routes"
-import '/src/types/express/index.d'
+
 dotenv.config()
 const app = express()
 

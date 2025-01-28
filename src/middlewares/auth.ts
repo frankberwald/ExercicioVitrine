@@ -31,7 +31,7 @@ const authMiddle = async (req: Request, res: Response, next: NextFunction): Prom
       res.status(401).json({ message: "Usuário não encontrado." });
       return;
     }
-    (req as any).user = user;
+    req.user = user
     next()
   } catch (error) {
     console.error("Erro de autenticação", error);

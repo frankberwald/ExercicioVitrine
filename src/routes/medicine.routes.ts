@@ -1,5 +1,5 @@
 import { AppDataSource } from "../data-source"
-import { Medicines } from "../entities/Medicines"
+import Medicines  from "../entities/Medicines"
 import { Router, Request, Response } from "express";
 import authMiddle from "../middlewares/auth";
 

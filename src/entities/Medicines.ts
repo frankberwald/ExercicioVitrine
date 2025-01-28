@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "ty
 import { User } from "./User"
 
 @Entity()
-export class Medicines {
+class Medicines {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -21,3 +21,5 @@ export class Medicines {
     user: User
 
 }
+
+export default Medicines
